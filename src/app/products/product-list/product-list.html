@@ -1,0 +1,26 @@
+<h2>
+    {{ title() }}
+</h2>
+
+@if (error(); as message) {
+    <div class="errorMessage">{{ message }}</div>
+} @else if (isLoading()) {
+    <div class="loading"></div>
+} @else {
+
+    <div>{{ products().length }} products</div>
+
+    <ul class="products">
+        @for (product of products() | orderBy:['-price']; track product.id) {
+            <li [class.discontinued]="product.discontinued"
+                [class.selected]="product == selectedProduct()"
+                (click)="select(product)">
+                <span class="name">{{ product.name | uppercase }}</span>
+                <span class="description">{{ product.description }}</span>
+                <span class="price">{{ product.price | currency:'CAD':'symbol':'.2' }}</span>
+            </li>
+        }
+    </ul>
+
+    <app-product-details [product]="selectedProduct()"></app-product-details>
+}
