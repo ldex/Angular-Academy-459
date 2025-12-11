@@ -1,18 +1,19 @@
 import { Component, inject, Signal, signal } from '@angular/core';
 import { Product } from '../../models/product';
 import { CurrencyPipe, SlicePipe, UpperCasePipe } from '@angular/common';
-import { ProductDetails } from "../product-details/product-details";
 import { ProductService } from '../product-service';
 import { OrderByPipe } from '../orderBy.pipe';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-product-list',
-  imports: [UpperCasePipe, CurrencyPipe, OrderByPipe, SlicePipe, ProductDetails],
+  imports: [UpperCasePipe, CurrencyPipe, OrderByPipe, SlicePipe, RouterLink],
   templateUrl: './product-list.html',
   styleUrl: './product-list.css',
 })
-export class ProductList {
+export default class ProductList {
   private productService = inject(ProductService)
+  private router = inject(Router)
 
   title = signal('Products')
   isLoading = this.productService.isLoading
@@ -22,6 +23,7 @@ export class ProductList {
 
   select(product: Product) {
     this.selectedProduct.set(product)
+    this.router.navigateByUrl('/products/' + product.id)
   }
 
   // Pagination

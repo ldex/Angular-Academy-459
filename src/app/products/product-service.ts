@@ -16,7 +16,28 @@ export class ProductService {
 
   error = signal<string>(undefined)
 
+  createProduct(newProduct: Omit<Product, 'id'>): Promise<void> {
+    this.apiService.createProduct(newProduct).subscribe({
+      next: (product) => {
+        this.productsCache.update((products) => [...products, product]);
+        console.log('Product saved on the server with id: ' + product.id);
+      },
+      error: (error) => {
+        this.handleError(error, 'Failed to save product.');
+        return Promise.reject();
+      },
+    });
+    return Promise.resolve();
+  }
+
+  getProductById(id: number): Product | undefined {
+    return this.productsCache().find(product => product.id === id)
+  }
+
   getProducts(): Signal<Product[]> {
+    if(this.productsCache().length > 0)
+        return this.productsCache
+
     this.loading.set(true)
     this.apiService.loadProducts().subscribe(
       {
