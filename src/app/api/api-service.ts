@@ -16,7 +16,7 @@ export class ApiService {
             .http
             .get<Product[]>(this.baseUrl)
             .pipe(
-              delay(1500)
+              delay(1500) // For the demo...
             )
   }
 
