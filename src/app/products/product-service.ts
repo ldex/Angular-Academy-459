@@ -2,6 +2,7 @@ import { inject, Injectable, Signal, signal } from '@angular/core';
 import { Product } from '../models/product';
 import { ApiService } from '../api/api-service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -9,12 +10,24 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class ProductService {
 
   private apiService = inject(ApiService)
+  private router = inject(Router)
 
   private productsCache = signal<Product[]>([])
   private loading = signal(false)
   isLoading = this.loading.asReadonly()
 
   error = signal<string>(undefined)
+
+  deleteProduct(id: number) {
+    this.apiService.deleteProduct(id).subscribe({
+      next: () => {
+        this.productsCache.update(products => products.filter(p => p.id !== id));
+        console.log('Product deleted');
+        this.router.navigateByUrl('/products');
+      },
+      error: (error) => this.handleError(error, 'Failed to delete product.')
+    });
+  }
 
   createProduct(newProduct: Omit<Product, 'id'>): Promise<void> {
     this.apiService.createProduct(newProduct).subscribe({

@@ -18,4 +18,8 @@ export class ProductDetails {
   product = computed(
     () => this.productService.getProductById(this.id())
   )
+
+  deleteProduct() {
+    this.productService.deleteProduct(this.id())
+  }
 }

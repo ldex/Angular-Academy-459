@@ -4,6 +4,7 @@ import { CurrencyPipe, SlicePipe, UpperCasePipe } from '@angular/common';
 import { ProductService } from '../product-service';
 import { OrderByPipe } from '../orderBy.pipe';
 import { Router, RouterLink } from '@angular/router';
+import { ProductForm } from '../product-form/product-form';
 
 @Component({
   selector: 'app-product-list',
